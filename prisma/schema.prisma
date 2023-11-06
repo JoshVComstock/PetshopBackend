@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  ci        Int     @id
+  nombre    String
+  apellido  String
+  telefono  Int
+  direccion String
+  Venta     Venta[]
+}
+
+model Usuario {
+  id       Int     @id @default(autoincrement())
+  nombre   String
+  correo   String  @unique
+  password String
+  estado   Boolean @default(true)
+}
+
+model Categoria {
+  id       Int        @id @default(autoincrement())
+  nombre   String
+  Producto Producto[]
+}
+
+model Marca {
+  id       Int        @id @default(autoincrement())
+  nombre   String
+  Producto Producto[]
+}
+
+model Producto {
+  id             Int             @id @default(autoincrement())
+  nombre         String
+  descripcion    String
+  categoriaId    Int
+  marcaId        Int
+  cantidad       Int
+  precio         Float
+  unidadmedida   String
+  precioCompra   Float
+  marca          Marca           @relation(fields: [marcaId], references: [id])
+  categoria      Categoria       @relation(fields: [categoriaId], references: [id])
+  DetalleVenta   DetalleVenta[]
+  DetallecCompra DetalleCompra[]
+}
+
+model Venta {
+  id                    Int            @id @default(autoincrement())
+  tipoPago              String
+  descuento             Float
+  inpuestoGeneradoVenta Float?
+  clienteId             Int
+  fecha                 DateTime       @default(now())
+  total                 Float
+  cliente               Cliente        @relation(fields: [clienteId], references: [ci])
+  DetalleVenta          DetalleVenta[]
+}
+
+model DetalleVenta {
+  id         Int       @id @default(autoincrement())
+  ventaId    Int
+  productoId Int
+  cantidad   Int
+  precio     Float
+  venta      Venta?    @relation(fields: [ventaId], references: [id])
+  producto   Producto? @relation(fields: [productoId], references: [id])
+}
+
+model Proveedor {
+  id            Int      @id @default(autoincrement())
+  razonSocial   String
+  telefono      Int
+  direccion     String
+  gmail         String
+  representante String
+  ciudad        String
+  Compra        Compra[]
+}
+
+model Compra {
+  id             Int             @id @default(autoincrement())
+  ProveedorId    Int
+  fecha          DateTime        @default(now())
+  total          Float
+  proveedor      Proveedor?      @relation(fields: [ProveedorId], references: [id])
+  DetallecCompra DetalleCompra[]
+}
+
+model DetalleCompra {
+  id         Int       @id @default(autoincrement())
+  compraId   Int
+  productoId Int
+  cantidad   Int
+  precio     Float
+  compra     Compra?   @relation(fields: [compraId], references: [id])
+  producto   Producto? @relation(fields: [productoId], references: [id])
+}
