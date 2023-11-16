@@ -49,6 +49,7 @@ model Producto {
   precio         Float
   unidadmedida   String
   precioCompra   Float
+  fechaVencimiento String
   marca          Marca           @relation(fields: [marcaId], references: [id])
   categoria      Categoria       @relation(fields: [categoriaId], references: [id])
   DetalleVenta   DetalleVenta[]
