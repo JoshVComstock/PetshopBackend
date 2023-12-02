@@ -43,15 +43,15 @@ model Producto {
   id               Int             @id @default(autoincrement())
   nombre           String
   descripcion      String
-  categoriaId      Int
-  marcaId          Int
+  categoriaId      Int?
+  marcaId          Int?
   cantidad         Int
   precio           Float
   unidadmedida     String
   precioCompra     Float
   fechaVencimiento String
-  marca            Marca           @relation(fields: [marcaId], references: [id])
-  categoria        Categoria       @relation(fields: [categoriaId], references: [id])
+  marca            Marca?          @relation(fields: [marcaId], references: [id], onDelete: SetNull)
+  categoria        Categoria?      @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
   DetalleVenta     DetalleVenta[]
   DetallecCompra   DetalleCompra[]
 }
@@ -61,22 +61,22 @@ model Venta {
   tipoPago              String
   descuento             Float
   inpuestoGeneradoVenta Float?
-  clienteId             Int
+  clienteId             Int?
   motivo                String
   fecha                 DateTime       @default(now())
   total                 Float
-  cliente               Cliente        @relation(fields: [clienteId], references: [ci])
+  cliente               Cliente?       @relation(fields: [clienteId], references: [ci], onDelete: SetNull)
   DetalleVenta          DetalleVenta[]
 }
 
 model DetalleVenta {
   id         Int       @id @default(autoincrement())
-  ventaId    Int
-  productoId Int
+  ventaId    Int?
+  productoId Int?
   cantidad   Int
   precio     Float
-  venta      Venta?    @relation(fields: [ventaId], references: [id])
-  producto   Producto? @relation(fields: [productoId], references: [id])
+  venta      Venta?    @relation(fields: [ventaId], references: [id], onDelete: SetNull)
+  producto   Producto? @relation(fields: [productoId], references: [id], onDelete: SetNull)
 }
 
 model Proveedor {
@@ -92,19 +92,19 @@ model Proveedor {
 
 model Compra {
   id             Int             @id @default(autoincrement())
-  ProveedorId    Int
+  ProveedorId    Int?
   fecha          DateTime        @default(now())
   total          Float
-  proveedor      Proveedor?      @relation(fields: [ProveedorId], references: [id])
+  proveedor      Proveedor?      @relation(fields: [ProveedorId], references: [id], onDelete: SetNull)
   DetallecCompra DetalleCompra[]
 }
 
 model DetalleCompra {
   id         Int       @id @default(autoincrement())
-  compraId   Int
-  productoId Int
+  compraId   Int?
+  productoId Int?
   cantidad   Int
   precio     Float
-  compra     Compra?   @relation(fields: [compraId], references: [id])
-  producto   Producto? @relation(fields: [productoId], references: [id])
+  compra     Compra?   @relation(fields: [compraId], references: [id], onDelete: SetNull)
+  producto   Producto? @relation(fields: [productoId], references: [id], onDelete: SetNull)
 }

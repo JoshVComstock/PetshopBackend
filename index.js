@@ -1,7 +1,6 @@
 
 import express from 'express';
 import cors from 'cors'
-
 import usuario from './controllers/usuario.js';
 import compra from './controllers/compra.js';
 import detallecompra from './controllers/detallecompra.js';
