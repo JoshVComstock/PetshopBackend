@@ -51,4 +51,5 @@ app.put("/detalleVenta/:id", async (req, res) => {
   }
 });
 
+
 export default app;

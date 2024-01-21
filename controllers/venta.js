@@ -156,5 +156,23 @@ app.post("/vender", async (req, res) => {
     });
   }
 });
+app.delete("/venta/:id", async (req, res) => {
+  try {
+    const venta = await prisma.venta.delete({
+      where: {
+        id: Number(req.params.id),
+      },
+    });
+    res.json({
+      data: venta,
+      message: "Venta eliminado correctamente",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al eliminar venta",
+      error: error.message,
+    });
+  }
+});
 
 export default app;
